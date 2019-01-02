@@ -89,7 +89,7 @@ class DbAjudante{
 
   //Atualizar usuario
 
-  Future<int> atualizarUsuario(Afazer afazer) async {
+  Future<int> atualizarAfazer(Afazer afazer) async {
     var bdCliente = await db;
     return await bdCliente.update(nomeTabela,
         afazer.toMap(), where: "$colunaId = ?", whereArgs: [afazer.id]);

@@ -30,17 +30,18 @@ class _AfazeresTelaState extends State<AfazeresTela> {
         children: <Widget>[
           Flexible(
             child: ListView.builder(
-              itemCount: _afazerLista.length,
-              padding: const EdgeInsets.all(8.0),
-              itemBuilder: (_, int posicao) {
-              return Card(
-                color: Colors.white10,
-                child: ListTile(
-                  title: _afazerLista[posicao],
-                  onLongPress: () => debugPrint("LongPress"),
-                ),
-              );
-            }),
+                itemCount: _afazerLista.length,
+                padding: const EdgeInsets.all(8.0),
+                itemBuilder: (_, int posicao) {
+                  return Card(
+                    color: Colors.white10,
+                    child: ListTile(
+                      title: _afazerLista[posicao],
+                      onLongPress: () =>
+                          _atualizarAfazer(_afazerLista[posicao], posicao),
+                    ),
+                  );
+                }),
           )
         ],
       ),
@@ -57,7 +58,7 @@ class _AfazeresTelaState extends State<AfazeresTela> {
     List afazeres = await db.recuperarTodosAfazeres();
     afazeres.forEach((item) {
       setState(() {
-        if(afazeres == null){
+        if (afazeres == null) {
           Text("Nada");
         }
         _afazerLista.add(Afazer.map(item));
@@ -101,7 +102,7 @@ class _AfazeresTelaState extends State<AfazeresTela> {
 
   void _lidarComtexto(String text) async {
     _control.clear();
-    
+
     Afazer afazer = new Afazer(text, dataFormatada());
 
     int salvoId = await db.salvarAfazer(afazer);
@@ -113,10 +114,63 @@ class _AfazeresTelaState extends State<AfazeresTela> {
   }
 
   String dataFormatada() {
-      var agora = DateTime.now();
-      initializeDateFormatting("pt_BR", null);
-      var formatador = new DateFormat.yMMMd("pt_BR");
+    var agora = DateTime.now();
+    initializeDateFormatting("pt_BR", null);
+    var formatador = new DateFormat.yMMMd("pt_BR");
 
-      return formatador.format(agora);
+    return formatador.format(agora);
+  }
+
+  _atualizarAfazer(Afazer afazer, int posicao) {
+    var alert = AlertDialog(
+      title: Text("Atualizar Afazer"),
+      content: Row(
+        children: <Widget>[
+          Expanded(
+            child: TextField(
+              controller: _control,
+              autofocus: true,
+              decoration: InputDecoration(
+                  labelText: "Afazer", icon: Icon(Icons.update)),
+            ),
+          )
+        ],
+      ),
+      actions: <Widget>[
+        FlatButton(
+            onPressed: () async {
+              Afazer atualizarItem = Afazer.fromMap({
+                "nome": _control.text,
+                "data": dataFormatada(),
+                "id": afazer.id
+              });
+
+              _lidarComAtualizacao(posicao, afazer);
+              await db.atualizarAfazer(atualizarItem);
+
+              setState(() {
+
+              });
+            },
+            child: Text("Atualizar")),
+        FlatButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text("Cancelar"),
+        )
+      ],
+    );
+    showDialog(
+        context: context,
+        builder: (_) {
+          return alert;
+        });
+  }
+
+  void _lidarComAtualizacao(int posicao, Afazer afazer) {
+    setState(() {
+      _afazerLista.removeWhere((elemento) {
+        _afazerLista[posicao].afazerNome == afazer.afazerNome;
+      });
+    });
   }
 }
