@@ -5,7 +5,7 @@ class Afazer extends StatelessWidget {
   String _afazerDataCriado;
   int _id;
 
-  Afazer(this._afazerNome, this._afazerDataCriado, this._id);
+  Afazer(this._afazerNome, this._afazerDataCriado);
 
   Afazer.map(dynamic obj) {
     this._afazerNome = obj["nome"];

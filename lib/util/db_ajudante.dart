@@ -54,7 +54,7 @@ class DbAjudante{
     return res;
   }
 
-  //Pegar usuario atravez da sua ID
+  //Pegar todos os afazeres
   Future<List> recuperarTodosAfazeres() async {
     var bdCliente = await db;
     var res = await bdCliente.rawQuery("SELECT * FROM $nomeTabela"
