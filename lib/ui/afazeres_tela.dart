@@ -37,7 +37,7 @@ class _AfazeresTelaState extends State<AfazeresTela> {
                     color: Colors.white10,
                     child: ListTile(
                       title: _afazerLista[posicao],
-                      onLongPress: () =>
+                      onTap: () =>
                           _atualizarAfazer(_afazerLista[posicao], posicao),
                           trailing: Listener(
                             key: Key(_afazerLista[posicao].afazerNome),
