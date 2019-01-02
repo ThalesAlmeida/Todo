@@ -80,7 +80,7 @@ class DbAjudante{
   }
 
   //Apagar or deletar
-  Future<int> apagarUsuario(int id) async {
+  Future<int> apagarAfazer(int id) async {
     var bdCliente = await db;
 
     return await bdCliente.delete(nomeTabela,

@@ -39,6 +39,12 @@ class _AfazeresTelaState extends State<AfazeresTela> {
                       title: _afazerLista[posicao],
                       onLongPress: () =>
                           _atualizarAfazer(_afazerLista[posicao], posicao),
+                          trailing: Listener(
+                            key: Key(_afazerLista[posicao].afazerNome),
+                            child: Icon(Icons.remove_circle,
+                            color: Colors.white,),
+                            onPointerDown: (pointerEvento) => _apagarAfazer(_afazerLista[posicao].id, posicao),
+                          ),
                     ),
                   );
                 }),
@@ -149,7 +155,8 @@ class _AfazeresTelaState extends State<AfazeresTela> {
               await db.atualizarAfazer(atualizarItem);
 
               setState(() {
-
+                  _pegarAfazeres();
+                  Navigator.pop(context);
               });
             },
             child: Text("Atualizar")),
@@ -171,6 +178,13 @@ class _AfazeresTelaState extends State<AfazeresTela> {
       _afazerLista.removeWhere((elemento) {
         _afazerLista[posicao].afazerNome == afazer.afazerNome;
       });
+    });
+  }
+
+  _apagarAfazer(int id, int posicao) async {
+    await db.apagarAfazer(id);
+    setState(() {
+      _afazerLista.removeAt(posicao);
     });
   }
 }
