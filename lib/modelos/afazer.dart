@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
 
 class Afazer extends StatelessWidget {
-  String _afazerNome;
-  String _afazerDataCriado;
-  int _id;
+  String afazerNome;
+  String afazerDataCriado;
+  double salario;
+  int id;
 
-  Afazer(this._afazerNome, this._afazerDataCriado);
+  Afazer({this.afazerNome, this.afazerDataCriado, this.salario});
 
   Afazer.map(dynamic obj) {
-    this._afazerNome = obj["nome"];
-    this._afazerDataCriado = obj["data"];
-    this._id = obj["id"];
+    this.afazerNome = obj["nome"];
+    this.afazerDataCriado = obj["data"];
+    this.id = obj["id"];
+    this.salario = obj["salario"];
   }
 
-  String get afazerNome => _afazerNome;
+  String get _afazerNome => afazerNome;
 
-  String get afazerDataCriado => _afazerDataCriado;
+  String get _afazerDataCriado => afazerDataCriado;
 
-  int get id => _id;
+  double get _salario => salario;
+
+  int get _id => id;
 
   Map<String, dynamic> toMap() {
     var mapa = new Map<String, dynamic>();
-    mapa["nome"] = _afazerNome;
-    mapa["data"] = _afazerDataCriado;
+    mapa["nome"] = afazerNome;
+    mapa["data"] = afazerDataCriado;
+    mapa["salario"] = salario;
 
     if (_id != null) {
       mapa["id"] = _id;
@@ -32,9 +37,10 @@ class Afazer extends StatelessWidget {
   }
 
   Afazer.fromMap(Map<String, dynamic> mapa) {
-    this._afazerNome = mapa["nome"];
-    this._afazerDataCriado = mapa["data"];
-    this._id = mapa["id"];
+    this.afazerNome = mapa["nome"];
+    this.afazerDataCriado = mapa["data"];
+    this.id = mapa["id"];
+    this.salario = double.parse(mapa["salario"]);
   }
 
   @override
@@ -46,6 +52,13 @@ class Afazer extends StatelessWidget {
         children: <Widget>[
           Text(
             _afazerNome,
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.9),
+          ),
+          Text(
+            _salario.toString(),
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

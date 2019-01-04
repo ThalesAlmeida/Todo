@@ -17,6 +17,7 @@ class DbAjudante{
   final String colunaId = "id";
   final String afazerNome = "nome";
   final String afazerDataCriado = "data";
+  final String salario = "salario";
 
   static Database _db;
 
@@ -32,7 +33,7 @@ class DbAjudante{
 
   initBd() async {
     Directory documentoDiretorio = await getApplicationDocumentsDirectory();
-    String caminho = join(documentoDiretorio.path, "bd_principal.db"); // home://directory/files/bd_principal.db
+    String caminho = join(documentoDiretorio.path, "afazer.db"); // home://directory/files/bd_principal.db
 
     var nossoBD = await openDatabase(caminho, version: 1, onCreate: _onCreate);
     return nossoBD;
@@ -41,7 +42,7 @@ class DbAjudante{
   void _onCreate(Database db, int version) async {
     await db.execute("CREATE TABLE $nomeTabela($colunaId INTEGER PRIMARY KEY,"
         "$afazerNome REAL,"
-        "$afazerDataCriado REAL)");
+        "$afazerDataCriado REAL, $salario DOUBLE)");
   }
 
   //CRUD - CREATE, READ, UPDATE, DELETE

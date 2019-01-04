@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watering1_app/modelos/afazer.dart';
+import 'package:watering1_app/ui/cadastro_afazer.dart';
 import 'package:watering1_app/util/db_ajudante.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -11,10 +12,35 @@ class AfazeresTela extends StatefulWidget {
 
 class _AfazeresTelaState extends State<AfazeresTela> {
   final TextEditingController _control = new TextEditingController();
+  final TextEditingController _controlVezes = new TextEditingController();
+
+  final formKey = new GlobalKey<FormState>();
+  final scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  String _name;
+  double _salario;
 
   var db = new DbAjudante();
 
   final List<Afazer> _afazerLista = <Afazer>[];
+
+  void _submit(){
+    final form = formKey.currentState;
+
+    if(form.validate()){
+      form.save();
+
+      Afazer afazer = new Afazer(
+        afazerNome: _name,
+        salario: _salario,
+      );
+
+      setState(() {
+        var db = new DbAjudante();
+        db.salvarAfazer(afazer);
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -37,7 +63,7 @@ class _AfazeresTelaState extends State<AfazeresTela> {
                     color: Colors.white10,
                     child: ListTile(
                       title: _afazerLista[posicao],
-                      onTap: () =>
+                      onLongPress: () =>
                           _atualizarAfazer(_afazerLista[posicao], posicao),
                           trailing: Listener(
                             key: Key(_afazerLista[posicao].afazerNome),
@@ -73,51 +99,23 @@ class _AfazeresTelaState extends State<AfazeresTela> {
   }
 
   void _mostrarFormulario() {
-    var alert = AlertDialog(
-      content: Row(
-        children: <Widget>[
-          Expanded(
-            child: TextField(
-              controller: _control,
-              autofocus: true,
-              decoration: InputDecoration(
-                  labelText: "Afazer",
-                  hintText: "Algo a afazer",
-                  icon: Icon(Icons.note_add)),
-            ),
-          )
-        ],
-      ),
-      actions: <Widget>[
-        FlatButton(
-          onPressed: () {
-            _lidarComtexto(_control.text);
-            _control.clear();
-            Navigator.pop(context);
-          },
-          child: Text("Salvar"),
-        )
-      ],
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context)=>AfazerPage())
     );
-    showDialog(
-        context: context,
-        builder: (_) {
-          return alert;
-        });
   }
 
-  void _lidarComtexto(String text) async {
-    _control.clear();
-
-    Afazer afazer = new Afazer(text, dataFormatada());
-
-    int salvoId = await db.salvarAfazer(afazer);
-
-    Afazer itemSalvo = await db.recuperarAfazer(salvoId);
-    setState(() {
-      _afazerLista.insert(0, itemSalvo);
-    });
-  }
+//  void _lidarComtexto(String text, double vezes) async {
+//    _control.clear();
+//
+//    Afazer afazer = new Afazer(text, dataFormatada(), vezes);
+//
+//    int salvoId = await db.salvarAfazer(afazer);
+//
+//    Afazer itemSalvo = await db.recuperarAfazer(salvoId);
+//    setState(() {
+//      _afazerLista.insert(0, itemSalvo);
+//    });
+//  }
 
   String dataFormatada() {
     var agora = DateTime.now();
